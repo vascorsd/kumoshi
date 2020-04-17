@@ -1,0 +1,12 @@
+/.idea/
+/.idea_modules/
+/.bloop/
+/.metals/
+/.bsp/
+
+/build/
+/out/
+/target/
+/.target/
+
+metals.sbt
