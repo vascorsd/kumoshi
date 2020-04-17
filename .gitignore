@@ -4,9 +4,9 @@
 /.metals/
 /.bsp/
 
-/build/
-/out/
-/target/
-/.target/
+build/
+out/
+target/
+.target/
 
-metals.sbt
+project/metals.sbt
