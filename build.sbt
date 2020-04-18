@@ -78,10 +78,12 @@ lazy val dependencies =
     }
 
     val cats = {
-      val version = "2.1.1"
+      val coreVersion   = "2.1.1"
+      val effectVersion = "2.1.3"
 
       Seq(
-        "org.typelevel" %% "cats-core" % version
+        "org.typelevel" %% "cats-core"   % coreVersion,
+        "org.typelevel" %% "cats-effect" % effectVersion
       )
     }
 
