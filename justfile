@@ -1,7 +1,7 @@
 set shell := ["bash", "-c", "-x"]
 
 # tools bins:
-SBT       := 'sbt -v --supershell=never --batch'
+SBT := 'sbt --supershell=never'
 
 
 ### begin TASKS ###
@@ -36,9 +36,16 @@ run APP:
 ### begin SOURCE CHANGING ###
 format TARGET='all':
     @if [ "{{TARGET}}" == "all" ]; then \
-        {{SBT}}; \
+        {{SBT}} scalafmt; \
     else \
-        {{SBT}} ; \
+        {{SBT}} "{{TARGET}} / scalafmt"; \
+    fi
+
+fix TARGET='all':
+    @if [ "{{TARGET}}" == "all" ]; then \
+        {{SBT}} "scalafix"; \
+    else \
+        {{SBT}} "{{TARGET}} / scalafix"; \
     fi
 
 ### end SOURCE CHANGING ###
@@ -46,10 +53,20 @@ format TARGET='all':
 
 ### begin CHECKING / LINTING ###
 check-format TARGET='all':
+    @if [ "{{TARGET}}" == "all" ]; then \
+        {{SBT}} scalafmtCheck; \
+    else \
+        {{SBT}} "{{TARGET}} / scalafmtCheck"; \
+    fi
 
-check-lint:
+check-fix TARGET='all':
+    @if [ "{{TARGET}}" == "all" ]; then \
+        {{SBT}} "scalafix --check"; \
+    else \
+        {{SBT}} "{{TARGET}} / scalafix --check"; \
+    fi
 
 check-updates:
-    {{SBT}}
+    {{SBT}} dependencyUpdates
 
 ### end CHECKING / LINTING ###
