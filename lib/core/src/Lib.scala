@@ -1,5 +1,5 @@
 package kumoshi
 
 object Lib {
-  val xx = 10
+  val xx = 15
 }

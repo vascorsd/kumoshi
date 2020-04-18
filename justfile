@@ -1,26 +1,20 @@
 set shell := ["bash", "-c", "-x"]
 
 # tools bins:
-SBT       := 'sbt -v -d --supershell=never'
-BLOOP     := 'bloop'
-COURSIER  := 'coursier'
-SCALAFMT  := 'scalafmt-jvm'
-SCALAFIX  := 'scalafix-jvm'
+SBT       := 'sbt -v --supershell=never --batch'
 
-clean-compile: clean reload build
 
-reload:
-    # generate bloop files
-    {{SBT}} bloopInstall
+### begin TASKS ###
+clean-compile: clean build
 
 # supply a specific TARGET to not build everything
 build TARGET='all':
     @if [ "{{TARGET}}" == "all" ]; then \
         echo 'Building all targets...'; \
-        {{BLOOP}} compile kumoshi; \
+        {{SBT}} compile; \
     else \
         echo 'Building only specified target...'; \
-        {{BLOOP}} compile {{TARGET}}; \
+        {{SBT}} "{{TARGET}} / compile"; \
     fi
 
 # supply MODE=all really clean the workspace as if fresh git clone
@@ -33,5 +27,29 @@ clean MODE='':
         rm --recursive --force --verbose .bloop .idea .idea_modules .bsp .metals; \
     fi
 
-run APP: build
-    {{BLOOP}} run {{APP}}
+run APP:
+    {{SBT}} "{{APP}} / run"
+
+### end TASKS ###
+
+
+### begin SOURCE CHANGING ###
+format TARGET='all':
+    @if [ "{{TARGET}}" == "all" ]; then \
+        {{SBT}}; \
+    else \
+        {{SBT}} ; \
+    fi
+
+### end SOURCE CHANGING ###
+
+
+### begin CHECKING / LINTING ###
+check-format TARGET='all':
+
+check-lint:
+
+check-updates:
+    {{SBT}}
+
+### end CHECKING / LINTING ###
