@@ -6,6 +6,9 @@ import com.monovore.decline._
 import zio._
 import zio.console._
 import cats.implicits._
+import kumoshi.authz.RegisterReq
+import sttp.model.StatusCode
+import sttp.tapir.DecodeResult
 
 object KumoshiCLI extends App {
   implicit val helpShow: Show[Help] = Show.fromToString[Help]
@@ -24,7 +27,7 @@ object KumoshiCLI extends App {
     } yield exit).merge.map(_.code)
   }
 
-  def commandParser(args: List[String]) =
+  def commandParser(args: List[String]): ZIO[Console, ExitCode, Unit] =
     ZIO
       .fromEither(
         // sys.env is an effect. ZIO has System getEnv for a single value,
@@ -45,6 +48,26 @@ object KumoshiCLI extends App {
   def program(args: Unit): ZIO[Console, String, String] =
     for {
       _ <- putStrLn("kumoshi working...")
+      _ <- ZIO.effectTotal {
+            import sttp.client._
+            import sttp.tapir.client.sttp._
+
+            implicit val backend: SttpBackend[Identity, Nothing, NothingT] = HttpURLConnectionBackend()
+
+            val req = authz.registerDevice
+              .toSttpRequest(uri"https://my.remarkable.com")
+              .apply(RegisterReq("12345678", "test", "poop"))
+
+            val result: DecodeResult[Either[(StatusCode, String), String]] = req.send().body
+
+            /* responses:
+              Value(Left((400,Failed to decode POST body as JSON
+              Value(Left((400,Code has the wrong length, it should be 8
+              Value(Left((400,Missing required field (DeviceDesc and/or DeviceID)
+              Value(Left((400,Invalid One-time-code
+             */
+            result
+          } >>= (jj => putStrLn(jj.toString))
       x <- ZIO.fromEither("".asRight[String])
     } yield (x)
 }
