@@ -3,10 +3,11 @@
 /.bloop/
 /.metals/
 /.bsp/
+/.vscode/
 
 build/
 out/
 target/
 .target/
 
-project/metals.sbt
+metals.sbt

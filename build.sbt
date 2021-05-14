@@ -31,7 +31,7 @@ lazy val endpoints = project
   .settings(
     commonSettings,
     libraryDependencies ++=
-      dependencies.softeware_mill_http
+      dependencies.software_mill_http
   )
 
 lazy val commonSettings = Seq(
@@ -69,15 +69,17 @@ lazy val commonSettings = Seq(
   sourcesInBase := false,
   // compiler plugins
   addCompilerPlugin(
-    "io.tryp" % "splain" % "0.5.1" cross CrossVersion.patch
+    "io.tryp" % "splain" % "0.5.8" cross CrossVersion.patch
   ),
   addCompilerPlugin(
-    "org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full
+    "org.typelevel" %% "kind-projector" % "0.12.0" cross CrossVersion.full
   ),
   addCompilerPlugin(
     "com.olegpy" %% "better-monadic-for" % "0.3.1"
   ),
-  addCompilerPlugin(scalafixSemanticdb)
+  addCompilerPlugin(
+    scalafixSemanticdb
+  )
 )
 
 // libraries dependencies
@@ -123,7 +125,7 @@ lazy val dependencies =
       )
     }
 
-    val softeware_mill_http = {
+    val software_mill_http = {
       val sttpVersion  = "2.0.9"
       val modelVersion = "1.0.3"
       val tapirVersion = "0.13.2"
@@ -139,14 +141,8 @@ lazy val dependencies =
     }
   }
 
-// scalafix rules depencies
-ThisBuild / scalafixDependencies ++= Seq(
-  "com.github.vovapolu" %% "scaluzzi"     % "0.1.6",
-  "com.nequissimus"     %% "sort-imports" % "0.3.2"
-)
-
 // sanity
-Global / onChangedBuildSource := IgnoreSourceChanges                     // still keeps generating fucking target folder!!! fuck this.
-Global / useSuperShell := false                                          // really do not want supershell
-Global / turbo := false                                                  // not sure if does anything...
-Global / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Flat // not sure if this does anything
+Global / onChangedBuildSource := ReloadOnSourceChanges // still keeps generating fucking target folder!!! fuck this.
+Global / useSuperShell := false                        // really do not want supershell
+Global / turbo := false                                // not sure if does anything...
+//Global / classLoaderLayeringStrategy := ClassLoaderLayeringStrategy.Flat // not sure if this does anything

@@ -2,18 +2,18 @@ package kumoshi
 
 import cats.Show
 import cats.effect.ExitCode
-import com.monovore.decline._
-import zio._
-import zio.console._
 import cats.implicits._
+import com.monovore.decline._
 import kumoshi.authz.RegisterReq
 import sttp.model.StatusCode
 import sttp.tapir.DecodeResult
+import zio._
+import zio.console._
 
 object KumoshiCLI extends App {
   implicit val helpShow: Show[Help] = Show.fromToString[Help]
 
-  val commandDescription = Command(
+  val commandDescription: Command[Unit] = Command(
     "kumoshi",
     "A client to the remarkable hardware"
   )(
